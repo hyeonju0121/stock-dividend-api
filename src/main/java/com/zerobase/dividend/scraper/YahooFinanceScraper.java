@@ -15,13 +15,14 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class YahooFinanceScraper {
+public class YahooFinanceScraper implements Scraper {
 
     private static final String STATISTICS_URL = "https://finance.yahoo.com/quote/%s/history?period1=%d&period2=%d&interval=1mo";
     private static final String SUMMARY_URL = "https://finance.yahoo.com/quote/%s";
 
     private static final long START_TIME = 86400; // 60초 * 60분 * 24시간
 
+    @Override
     public ScrapedResult scrap(Company company) {
         var scrapResult = new ScrapedResult();
         scrapResult.setCompany(company);
@@ -73,6 +74,7 @@ public class YahooFinanceScraper {
     }
 
     // 입력한 ticker 를 대상으로, 메타 정보를 스크래핑하여 Company 객체를 생성하는 메서드 (ticker, name)
+    @Override
     public Company scrapCompanyByTicker(String ticker) {
         try {
             String url = String.format(SUMMARY_URL, ticker);
