@@ -1,11 +1,18 @@
 package com.zerobase.dividend.controller;
 
+import com.zerobase.dividend.dto.Company;
+import com.zerobase.dividend.service.CompanyService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/company")
+@AllArgsConstructor
 public class CompanyController {
+
+    private final CompanyService companyService;
 
     // 배당금 검색 - 자동완성
     @GetMapping("/autocomplete")
@@ -21,8 +28,15 @@ public class CompanyController {
 
     // 배당금 저장
     @PostMapping("")
-    public ResponseEntity<?> addCompany() {
-        return null;
+    public ResponseEntity<?> addCompany(@RequestBody Company request) {
+        String ticker = request.getTicker().trim();
+        if (ObjectUtils.isEmpty(ticker)) { // ticker 를 빈 값으로 입력한 경우, error 발생시킴
+            throw new RuntimeException("ticker is empty");
+        }
+
+        Company company = this.companyService.save(ticker);
+
+        return ResponseEntity.ok(company);
     }
 
     // 배당금 삭제
