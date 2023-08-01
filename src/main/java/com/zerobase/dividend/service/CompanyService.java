@@ -24,8 +24,11 @@ public class CompanyService {
     private final DividendRepository dividendRepository;
 
     public Company save(String ticker) {
-
-        return null;
+        boolean exists = this.companyRepository.existsByTicker(ticker);
+        if (exists) {
+            throw new RuntimeException("already exists ticker -> " + ticker); // 해당 ticker 가 DB에 존재하는 경우, error 발생시킴
+        }
+        return this.storeCompanyAndDividend(ticker); // DB에 존재하지 않는 경우, 스크래핑하는 메서드 호출
     }
 
     // 해당 ticker 로 메타정보와 배당금 정보를 스크래핑하고, DB에 저장하는 메서드
