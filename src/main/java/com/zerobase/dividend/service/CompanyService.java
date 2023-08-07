@@ -31,6 +31,10 @@ public class CompanyService {
         return this.storeCompanyAndDividend(ticker); // DB에 존재하지 않는 경우, 스크래핑하는 메서드 호출
     }
 
+    public List<CompanyEntity> getAllCompany() {
+        return this.companyRepository.findAll();
+    }
+
     // 해당 ticker 로 메타정보와 배당금 정보를 스크래핑하고, DB에 저장하는 메서드
     private Company storeCompanyAndDividend(String ticker) {
         // ticker 를 기준으로 회사를 스크래핑

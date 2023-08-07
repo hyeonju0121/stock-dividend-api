@@ -1,11 +1,14 @@
 package com.zerobase.dividend.controller;
 
+import com.zerobase.dividend.domain.CompanyEntity;
 import com.zerobase.dividend.dto.Company;
 import com.zerobase.dividend.service.CompanyService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/company")
@@ -20,13 +23,18 @@ public class CompanyController {
         return null;
     }
 
-    // 회사 리스트 조회
+    /**
+     * 회사 리스트 조회
+     */
     @GetMapping("")
     public ResponseEntity<?> searchCompany() {
-        return null;
+        List<CompanyEntity> companies = this.companyService.getAllCompany();
+        return ResponseEntity.ok(companies);
     }
 
-    // 배당금 저장
+    /**
+     * 회사 및 배당금 정보 추가
+     */
     @PostMapping("")
     public ResponseEntity<?> addCompany(@RequestBody Company request) {
         String ticker = request.getTicker().trim();
