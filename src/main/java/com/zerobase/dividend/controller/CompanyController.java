@@ -4,6 +4,8 @@ import com.zerobase.dividend.domain.CompanyEntity;
 import com.zerobase.dividend.dto.Company;
 import com.zerobase.dividend.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +29,8 @@ public class CompanyController {
      * 회사 리스트 조회
      */
     @GetMapping("")
-    public ResponseEntity<?> searchCompany() {
-        List<CompanyEntity> companies = this.companyService.getAllCompany();
+    public ResponseEntity<?> searchCompany(final Pageable pageable) {
+        Page<CompanyEntity> companies = this.companyService.getAllCompany(pageable);
         return ResponseEntity.ok(companies);
     }
 

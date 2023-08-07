@@ -8,6 +8,8 @@ import com.zerobase.dividend.repository.CompanyRepository;
 import com.zerobase.dividend.repository.DividendRepository;
 import com.zerobase.dividend.scraper.Scraper;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -31,8 +33,8 @@ public class CompanyService {
         return this.storeCompanyAndDividend(ticker); // DB에 존재하지 않는 경우, 스크래핑하는 메서드 호출
     }
 
-    public List<CompanyEntity> getAllCompany() {
-        return this.companyRepository.findAll();
+    public Page<CompanyEntity> getAllCompany(Pageable pageable) {
+        return this.companyRepository.findAll(pageable);
     }
 
     // 해당 ticker 로 메타정보와 배당금 정보를 스크래핑하고, DB에 저장하는 메서드
