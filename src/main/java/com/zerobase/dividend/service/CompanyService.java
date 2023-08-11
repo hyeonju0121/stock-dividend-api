@@ -10,6 +10,8 @@ import com.zerobase.dividend.scraper.Scraper;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -58,6 +60,18 @@ public class CompanyService {
         this.dividendRepository.saveAll(dividendEntities); // Dividend DB에 배당금 정보 저장
 
         return company;
+    }
+
+    // LIKE 연산자를 사용해 키워드에 해당하는 회사명을 조회하는 메서드
+    public Page<String> getCompanyNamesByKeyword(String keyword) {
+        Pageable limit = PageRequest.of(0, 10);
+        Page<CompanyEntity> companyEntities = this.companyRepository.findByNameStartingWithIgnoreCase(keyword, limit);
+
+        List<String> result = companyEntities.stream()
+                .map(e -> e.getName())
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(result);
     }
 
     // trie 에 회사명을 저장하는 메서드
