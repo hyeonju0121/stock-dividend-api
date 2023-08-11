@@ -19,10 +19,13 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    // 배당금 검색 - 자동완성
+    /**
+     * 자동완성
+     */
     @GetMapping("/autocomplete")
     public ResponseEntity<?> autocomplete(@RequestParam String keyword) {
-        return null;
+        var result = this.companyService.autocomplete(keyword);
+        return ResponseEntity.ok(result);
     }
 
     /**
@@ -45,6 +48,7 @@ public class CompanyController {
         }
 
         Company company = this.companyService.save(ticker);
+        this.companyService.addAutocompleteKeyword(company.getName()); // trie 에 회사명 추가
 
         return ResponseEntity.ok(company);
     }
