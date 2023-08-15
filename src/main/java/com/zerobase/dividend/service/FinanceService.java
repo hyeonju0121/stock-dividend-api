@@ -5,6 +5,7 @@ import com.zerobase.dividend.domain.DividendEntity;
 import com.zerobase.dividend.dto.Company;
 import com.zerobase.dividend.dto.Dividend;
 import com.zerobase.dividend.dto.ScrapedResult;
+import com.zerobase.dividend.dto.constants.CacheKey;
 import com.zerobase.dividend.repository.CompanyRepository;
 import com.zerobase.dividend.repository.DividendRepository;
 import lombok.AllArgsConstructor;
@@ -23,7 +24,7 @@ public class FinanceService {
     private final CompanyRepository companyRepository;
     private final DividendRepository dividendRepository;
 
-    @Cacheable(key = "#companyName", value = "finance")
+    @Cacheable(key = "#companyName", value = CacheKey.KEY_FINANCE)
     public ScrapedResult getDividendByCompanyName(String companyName) {
         log.info("search company -> " + companyName);
 
