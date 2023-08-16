@@ -2,6 +2,7 @@ package com.zerobase.dividend.service;
 
 import com.zerobase.dividend.domain.MemberEntity;
 import com.zerobase.dividend.dto.Auth;
+import com.zerobase.dividend.exception.impl.AlreadyExistUserException;
 import com.zerobase.dividend.repository.MemberRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class MemberService implements UserDetailsService {
     public MemberEntity register(Auth.SignUp member) {
         boolean exists = this.memberRepository.existsByUsername(member.getUsername());
         if (exists) { // 동일한 id 가 존재하는 경우 에러 발생
-            throw new RuntimeException("이미 사용 중인 아이디 입니다.");
+            throw new AlreadyExistUserException();
         }
 
         member.setPassword(this.passwordEncoder.encode(member.getPassword())); // password 인코딩
