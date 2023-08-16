@@ -89,4 +89,16 @@ public class CompanyService {
     public void deleteAutocompleteKeyword(String keyword) {
         this.trie.remove(keyword);
     }
+
+    public String deleteCompany(String ticker) {
+        var company = this.companyRepository.findByTicker(ticker)
+                                        .orElseThrow(() -> new RuntimeException("잘못된 ticker 명이거나 존재하지 않는 회사입니다.")); // ticker 명이 존재하지 않다면 error 발생
+
+        this.dividendRepository.deleteAllByCompanyId(company.getId());
+        this.companyRepository.delete(company);
+
+        this.deleteAutocompleteKeyword(company.getName()); // trie 에 있는 회사 키워드 삭제
+
+        return company.getName();
+    }
 }

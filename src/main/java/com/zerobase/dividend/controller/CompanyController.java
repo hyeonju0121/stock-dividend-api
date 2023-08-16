@@ -2,8 +2,10 @@ package com.zerobase.dividend.controller;
 
 import com.zerobase.dividend.domain.CompanyEntity;
 import com.zerobase.dividend.dto.Company;
+import com.zerobase.dividend.dto.constants.CacheKey;
 import com.zerobase.dividend.service.CompanyService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class CompanyController {
 
     private final CompanyService companyService;
+    private final CacheManager redisCacheManager;
 
     /**
      * 자동완성
@@ -54,9 +57,20 @@ public class CompanyController {
         return ResponseEntity.ok(company);
     }
 
-    // 배당금 삭제
-    @DeleteMapping("")
-    public ResponseEntity<?> deleteCompany(@RequestParam String ticker) {
-        return null;
+    /**
+     * 회사 삭제
+     */
+    @DeleteMapping("/{ticker}")
+    @PreAuthorize("hasRole('WRITE')") // 관리 권한이 있는 user 만 api 호출 가능
+    public ResponseEntity<?> deleteCompany(@PathVariable String ticker) {
+        String companyName = this.companyService.deleteCompany(ticker);
+        this.clearFinanceCache(companyName);
+
+        return ResponseEntity.ok(companyName);
+    }
+
+    // 캐시에 존재하는 회사 데이터 삭제
+    public void clearFinanceCache(String companyName) {
+        this.redisCacheManager.getCache(CacheKey.KEY_FINANCE).evict(companyName);
     }
 }
